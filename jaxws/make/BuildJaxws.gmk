@@ -78,7 +78,7 @@ BUILD_JAXWS += $(JAXWS_OUTPUTDIR)/jaxws_classes/META-INF/services/com.sun.tools.
 # for now, even though it actually breaks properties containing # in the value.
 # Using nawk to avoid solaris sed.
 $(JAXWS_OUTPUTDIR)/jaxws_classes/%.properties: $(JAXWS_TOPDIR)/src/share/jaxws_classes/%.properties
-	$(MKDIR) -p $(@D)
+	mkdir -p $(@D)
 	$(RM) $@ $@.tmp
 	$(CAT) $< | LANG=C $(NAWK) '{ sub(/#.*$$/,"#"); print }' > $@.tmp
 	$(MV) $@.tmp $@
@@ -88,7 +88,7 @@ TARGET_PROP_FILES := $(patsubst $(JAXWS_TOPDIR)/src/share/jaxws_classes/%, \
     $(JAXWS_OUTPUTDIR)/jaxws_classes/%, $(JAXWS_SRC_PROP_FILES))
 
 $(JAXWS_OUTPUTDIR)/jaf_classes/%.properties: $(JAXWS_TOPDIR)/src/share/jaf_classes/%.properties
-	$(MKDIR) -p $(@D)
+	mkdir -p $(@D)
 	$(RM) $@ $@.tmp
 	$(CAT) $< | LANG=C $(NAWK) '{ sub(/#.*$$/,"#"); print }' > $@.tmp
 	$(MV) $@.tmp $@
