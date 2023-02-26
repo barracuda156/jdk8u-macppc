@@ -25,6 +25,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <JavaNativeFoundation/JavaNativeFoundation.h>
+#import <AvailabilityMacros.h>
 
 @interface NSApplicationAWT : NSApplication {
     NSString *fApplicationName;
@@ -53,3 +54,15 @@
 
 void OSXAPP_SetApplicationDelegate(id <NSApplicationDelegate> delegate);
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+
+JNF_EXPORT NSString *JNFRunLoopDidStartNotification;
+
+@interface JNFRunLoop : NSObject { }
+
++ (NSString *)javaRunLoopMode;
++ (void)performOnMainThread:(SEL)aSelector on:(id)target withObject:(id)arg waitUntilDone:(BOOL)wait;
+
+@end
+
+#endif
