@@ -48,6 +48,8 @@
 #include <errno.h>
 #include <spawn.h>
 
+#include <AvailabilityMacros.h>
+
 struct NSAppArgs {
     int argc;
     char **argv;
@@ -1029,6 +1031,7 @@ int
 JVMInit(InvocationFunctions* ifn, jlong threadStackSize,
                  int argc, char **argv,
                  int mode, char *what, int ret) {
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1050 && !defined(__ppc__)
     if (sameThread) {
         JLI_TraceLauncher("In same thread\n");
         // need to block this thread against the main thread
@@ -1057,8 +1060,11 @@ JVMInit(InvocationFunctions* ifn, jlong threadStackSize,
         [pool drain];
         return rslt;
     } else {
+#endif
         return ContinueInNewThread(ifn, threadStackSize, argc, argv, mode, what, ret);
+#if MAC_OS_X_VERSION_MAX_ALLOWED > 1050 && !defined(__ppc__)
     }
+#endif
 }
 
 /*
