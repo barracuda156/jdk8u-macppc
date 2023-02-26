@@ -24,7 +24,7 @@
  */
 
 #import <JavaNativeFoundation/JavaNativeFoundation.h>
-
+#include <AvailabilityMacros.h>
 
 @interface AppleScriptExecutionContext : NSObject {
     NSString *source;
@@ -44,3 +44,16 @@
 - (id) invokeWithEnv:(JNIEnv *)env;
 
 @end
+
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+
+JNF_EXPORT NSString *JNFRunLoopDidStartNotification;
+
+@interface JNFRunLoop : NSObject { }
+
++ (NSString *)javaRunLoopMode;
++ (void)performOnMainThread:(SEL)aSelector on:(id)target withObject:(id)arg waitUntilDone:(BOOL)wait;
+
+@end
+
+#endif
