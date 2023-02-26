@@ -36,9 +36,9 @@
 
   // Atomically copy 64 bits of data
   static void atomic_copy64(volatile void *src, volatile void *dst) {
-#if defined(PPC32)
+#if defined(PPC32) || defined(__ppc__)
     double tmp;
-    asm volatile ("lfd  %0, 0(%1)\n"
+    __asm__ volatile ("lfd  %0, 0(%1)\n"
                   "stfd %0, 0(%2)\n"
                   : "=f"(tmp)
                   : "b"(src), "b"(dst));
