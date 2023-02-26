@@ -27,6 +27,7 @@
 #define __THREADUTILITIES_H
 
 #include <pthread.h>
+#include <AvailabilityMacros.h>
 
 #import "AWT_debug.h"
 
@@ -138,5 +139,18 @@ __attribute__((visibility("default")))
 @end
 
 void OSXAPP_SetJavaVM(JavaVM *vm);
+
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+
+JNF_EXPORT NSString *JNFRunLoopDidStartNotification;
+
+@interface JNFRunLoop : NSObject { }
+
++ (NSString *)javaRunLoopMode;
++ (void)performOnMainThread:(SEL)aSelector on:(id)target withObject:(id)arg waitUntilDone:(BOOL)wait;
+
+@end
+
+#endif
 
 #endif /* __THREADUTILITIES_H */

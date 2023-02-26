@@ -25,7 +25,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <JavaNativeFoundation/JavaNativeFoundation.h>
-#import <AvailabilityMacros.h>
+#include <AvailabilityMacros.h>
 
 @interface NSApplicationAWT : NSApplication {
     NSString *fApplicationName;
