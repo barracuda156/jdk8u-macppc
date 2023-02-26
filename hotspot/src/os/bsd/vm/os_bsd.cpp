@@ -112,7 +112,7 @@
 # include <mach-o/dyld.h>
 # include <sys/proc_info.h>
 # include <objc/objc-auto.h>
-# include <AvailabitilyMacros.h>
+# include <AvailabilityMacros.h>
 #endif
 
 #ifndef MAP_ANONYMOUS
