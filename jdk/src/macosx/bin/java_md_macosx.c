@@ -224,7 +224,7 @@ static InvocationFunctions *GetExportedJNIFunctions() {
 
     char *preferredJVM = sPreferredJVMType;
     if (preferredJVM == NULL) {
-#if defined(__i386__)
+#if defined(__i386__) || defined(__ppc__)
         preferredJVM = "client";
 #elif defined(__x86_64__)
         preferredJVM = "server";
