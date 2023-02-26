@@ -113,7 +113,11 @@ JNF_COCOA_ENTER(env);
 
         dispatch_fxn(queue, ^{
                 // attach the dispatch thread to the JVM if necessary, and get an env
-                JNFThreadContext ctx = JNFThreadDetachOnThreadDeath | JNFThreadSetSystemClassLoaderOnAttach | JNFThreadAttachAsDaemon;
+                JNFThreadContext ctx = JNFThreadDetachOnThreadDeath
+            #if MAC_OS_X_VERSION_MAX_ALLOWED > 1060
+                | JNFThreadSetSystemClassLoaderOnAttach | JNFThreadAttachAsDaemon
+            #endif
+                ;
                 JNIEnv *blockEnv = JNFObtainEnv(&ctx);
 
         JNF_COCOA_ENTER(blockEnv);
