@@ -23,8 +23,8 @@
  * questions.
  */
 
+#import "JNIUtilities.h"
 #import <Cocoa/Cocoa.h>
-#import <JavaNativeFoundation/JavaNativeFoundation.h>
 
 @interface NSApplicationAWT : NSApplication {
     NSString *fApplicationName;
@@ -52,4 +52,3 @@
 @end
 
 void OSXAPP_SetApplicationDelegate(id <NSApplicationDelegate> delegate);
-
