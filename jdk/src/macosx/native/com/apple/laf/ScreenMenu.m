@@ -214,7 +214,7 @@ JNF_COCOA_ENTER(env);
     delegate = [[[NativeToJavaDelegate alloc] initFromMenu:menu javaObj:wrapper] autorelease];
     CFRetain(delegate); // GC
 
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
         NSMenu *menu = delegate.nsmenu;
         if ([menu isJavaMenu]) {
             [menu setDelegate:delegate];
@@ -241,7 +241,7 @@ JNF_COCOA_ENTER(env);
 
     NativeToJavaDelegate *delegate = (NativeToJavaDelegate *)jlong_to_ptr(fModelPtr);
 
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^{
+    [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
         NSMenu *menu = delegate.nsmenu;
         [menu setJavaMenuDelegate:nil];
         [menu setDelegate:nil];

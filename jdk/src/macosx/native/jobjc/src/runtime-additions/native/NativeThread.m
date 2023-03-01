@@ -27,7 +27,7 @@
 
 #import <AppKit/AppKit.h>
 #import <JavaNativeFoundation/JavaNativeFoundation.h>
-
+#import "ThreadUtilities.h"
 
 @interface JObjCCallable : NSObject {
     @public jobject returnValue;
@@ -47,7 +47,7 @@ JNIEXPORT void JNICALL Java_com_apple_jobjc_Utils_00024Threads_performRunnableOn
 (JNIEnv *env, jclass clazz, jobject runnable, jboolean jWaitUntilDone)
 {
 JNF_COCOA_ENTER(env);
-    [JNFRunLoop performOnMainThreadWaiting:jWaitUntilDone
+    [ThreadUtilities performOnMainThreadWaiting:jWaitUntilDone
                                  withBlock:[JNFRunnable blockWithRunnable:runnable
                                                                   withEnv:env]];
 JNF_COCOA_EXIT(env);

@@ -153,7 +153,7 @@ JNF_COCOA_ENTER(env);
     NSURL *url = [NSURL URLWithString:JNFNormalizedNSStringForPath(env, urlString)];
 
         // Radar 3208005: Run this on the main thread; file:// style URLs will hang otherwise.
-    [JNFRunLoop performOnMainThreadWaiting:NO withBlock:^(){
+    [ThreadUtilities performOnMainThreadWaiting:NO block:^(){
         [[NSWorkspace sharedWorkspace] openURL:url];
     }];
 
@@ -219,7 +219,7 @@ JNIEXPORT jboolean JNICALL Java_com_apple_eio_FileManager__1moveToTrash
 JNF_COCOA_ENTER(env);
 
     NSString *path = JNFNormalizedNSStringForPath(env, url);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
+    [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
         NSInteger res = 0;
         [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
                                                      source:[path stringByDeletingLastPathComponent]
@@ -247,7 +247,7 @@ JNIEXPORT jboolean JNICALL Java_com_apple_eio_FileManager__1revealInFinder
 JNF_COCOA_ENTER(env);
 
     NSString *path = JNFNormalizedNSStringForPath(env, url);
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
+    [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
         returnValue = [[NSWorkspace sharedWorkspace] selectFile:path inFileViewerRootedAtPath:@""];
     }];
 

@@ -158,7 +158,7 @@ AWT_ASSERT_APPKIT_THREAD;
 
     [AWTToolkit eventCountPlusPlus];
 
-    [JNFRunLoop performOnMainThreadWaiting:NO withBlock:^() {
+    [ThreadUtilities performOnMainThreadWaiting:NO block:^() {
         [[self window] makeFirstResponder: self];
     }];
     if ([self window] != NULL) {

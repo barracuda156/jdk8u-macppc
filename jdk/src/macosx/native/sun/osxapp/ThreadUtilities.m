@@ -76,7 +76,7 @@ AWT_ASSERT_APPKIT_THREAD;
     if ([NSThread isMainThread] && wait == YES) {
         block(); 
     } else { 
-        [JNFRunLoop performOnMainThreadWaiting:wait withBlock:block]; 
+        [ThreadUtilities performOnMainThreadWaiting:wait withBlock:block]; 
     }
 }
 
@@ -84,7 +84,7 @@ AWT_ASSERT_APPKIT_THREAD;
     if ([NSThread isMainThread] && wait == YES) {
         [target performSelector:aSelector withObject:arg];
     } else {
-        [JNFRunLoop performOnMainThread:aSelector on:target withObject:arg waitUntilDone:wait];
+        [ThreadUtilities performOnMainThread:aSelector on:target withObject:arg waitUntilDone:wait];
     }
 }
 
