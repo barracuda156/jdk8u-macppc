@@ -23,107 +23,107 @@
 # questions.
 #
 
-ifeq ($(OPENJDK_TARGET_OS), macosx)
-
-  $(eval $(call SetupNativeCompilation,BUILD_LIBAPPLESCRIPTENGINE, \
-      LIBRARY := AppleScriptEngine, \
-      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
-      SRC := $(JDK_TOPDIR)/src/macosx/native/apple/applescript, \
-      LANG := C, \
-      OPTIMIZATION := LOW, \
-      CFLAGS := $(CFLAGS_JDKLIB) \
-          -I$(JDK_TOPDIR)/src/macosx/native/apple/applescript, \
-      LDFLAGS := $(LDFLAGS_JDKLIB) \
-          $(call SET_SHARED_LIBRARY_ORIGIN), \
-      LDFLAGS_SUFFIX := -framework Cocoa \
-          -framework Carbon \
-          -framework JavaNativeFoundation \
-          $(LDFLAGS_JDKLIB_SUFFIX), \
-      OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libAppleScriptEngine, \
-      DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
-
-  $(BUILD_LIBAPPLESCRIPTENGINE): $(BUILD_LIBJAVA)
-
-  BUILD_LIBRARIES += $(BUILD_LIBAPPLESCRIPTENGINE)
-
-endif
-
-##########################################################################################
-
-ifeq ($(OPENJDK_TARGET_OS), macosx)
-
-  $(eval $(call SetupNativeCompilation,BUILD_LIBOSXAPP, \
-      LIBRARY := osxapp, \
-      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
-      SRC := $(JDK_TOPDIR)/src/macosx/native/sun/osxapp, \
-      LANG := C, \
-      OPTIMIZATION := LOW, \
-      CFLAGS := $(CFLAGS_JDKLIB) \
-          -I$(JDK_TOPDIR)/src/macosx/native/sun/osxapp \
-          -I$(JDK_OUTPUTDIR)/gensrc/sun/osxapp, \
-      LDFLAGS := $(LDFLAGS_JDKLIB) \
-          $(call SET_SHARED_LIBRARY_ORIGIN), \
-      LDFLAGS_SUFFIX_macosx := \
-          -framework Accelerate \
-          -framework ApplicationServices \
-          -framework AudioToolbox \
-          -framework Carbon \
-          -framework Cocoa \
-          -framework Security \
-          -framework ExceptionHandling \
-          -framework JavaNativeFoundation \
-          -framework JavaRuntimeSupport \
-          -framework OpenGL \
-          -framework IOSurface \
-          -framework QuartzCore, \
-      OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libosxapp, \
-      DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
-
-  BUILD_LIBRARIES += $(BUILD_LIBOSXAPP)
-
-endif
-
-##########################################################################################
-
-ifeq ($(OPENJDK_TARGET_OS), macosx)
-
-  LIBOSX_DIRS := \
-      $(JDK_TOPDIR)/src/macosx/native/com/apple/concurrent \
-      $(JDK_TOPDIR)/src/macosx/native/java/util \
-      $(JDK_TOPDIR)/src/macosx/native/com/apple/eio \
-      $(JDK_TOPDIR)/src/macosx/native/apple/security \
-      $(JDK_TOPDIR)/src/macosx/native/apple/launcher
-
-  $(eval $(call SetupNativeCompilation,BUILD_LIBOSX, \
-      LIBRARY := osx, \
-      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
-      SRC := $(LIBOSX_DIRS), \
-      LANG := C, \
-      OPTIMIZATION := LOW, \
-      CFLAGS := $(CFLAGS_JDKLIB) \
-          $(foreach dir, $(LIBOSX_DIRS), -I$(dir)) \
-          -I$(JDK_TOPDIR)/src/macosx/native/sun/osxapp, \
-      LDFLAGS := $(LDFLAGS_JDKLIB) \
-          $(call SET_SHARED_LIBRARY_ORIGIN), \
-      LDFLAGS_SUFFIX_macosx := \
-          -losxapp \
-          -framework Cocoa \
-          -framework ApplicationServices \
-          -framework JavaNativeFoundation \
-          -framework JavaRuntimeSupport \
-          -framework Security \
-          -framework SystemConfiguration \
-          $(LDFLAGS_JDKLIB_SUFFIX), \
-      OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libosx, \
-      DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
-
-  BUILD_LIBRARIES += $(BUILD_LIBOSX)
-
-  $(BUILD_LIBOSX): $(BUILD_LIBOSXAPP)
-
-  $(BUILD_LIBOSX): $(BUILD_LIBJAVA)
-
-endif
+#ifeq ($(OPENJDK_TARGET_OS), macosx)
+#
+#  $(eval $(call SetupNativeCompilation,BUILD_LIBAPPLESCRIPTENGINE, \
+#      LIBRARY := AppleScriptEngine, \
+#      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
+#      SRC := $(JDK_TOPDIR)/src/macosx/native/apple/applescript, \
+#      LANG := C, \
+#      OPTIMIZATION := LOW, \
+#      CFLAGS := $(CFLAGS_JDKLIB) \
+#          -I$(JDK_TOPDIR)/src/macosx/native/apple/applescript, \
+#      LDFLAGS := $(LDFLAGS_JDKLIB) \
+#          $(call SET_SHARED_LIBRARY_ORIGIN), \
+#      LDFLAGS_SUFFIX := -framework Cocoa \
+#          -framework Carbon \
+#          -framework JavaNativeFoundation \
+#          $(LDFLAGS_JDKLIB_SUFFIX), \
+#      OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libAppleScriptEngine, \
+#      DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
+#
+#  $(BUILD_LIBAPPLESCRIPTENGINE): $(BUILD_LIBJAVA)
+#
+#  BUILD_LIBRARIES += $(BUILD_LIBAPPLESCRIPTENGINE)
+#
+#endif
+#
+###########################################################################################
+#
+#ifeq ($(OPENJDK_TARGET_OS), macosx)
+#
+#  $(eval $(call SetupNativeCompilation,BUILD_LIBOSXAPP, \
+#      LIBRARY := osxapp, \
+#      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
+#      SRC := $(JDK_TOPDIR)/src/macosx/native/sun/osxapp, \
+#      LANG := C, \
+#      OPTIMIZATION := LOW, \
+#      CFLAGS := $(CFLAGS_JDKLIB) \
+#          -I$(JDK_TOPDIR)/src/macosx/native/sun/osxapp \
+#          -I$(JDK_OUTPUTDIR)/gensrc/sun/osxapp, \
+#      LDFLAGS := $(LDFLAGS_JDKLIB) \
+#          $(call SET_SHARED_LIBRARY_ORIGIN), \
+#      LDFLAGS_SUFFIX_macosx := \
+#          -framework Accelerate \
+#          -framework ApplicationServices \
+#          -framework AudioToolbox \
+#          -framework Carbon \
+#          -framework Cocoa \
+#          -framework Security \
+#          -framework ExceptionHandling \
+#          -framework JavaNativeFoundation \
+#          -framework JavaRuntimeSupport \
+#          -framework OpenGL \
+#          -framework IOSurface \
+#          -framework QuartzCore, \
+#      OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libosxapp, \
+#      DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
+#
+#  BUILD_LIBRARIES += $(BUILD_LIBOSXAPP)
+#
+#endif
+#
+###########################################################################################
+#
+#ifeq ($(OPENJDK_TARGET_OS), macosx)
+#
+#  LIBOSX_DIRS := \
+#      $(JDK_TOPDIR)/src/macosx/native/com/apple/concurrent \
+#      $(JDK_TOPDIR)/src/macosx/native/java/util \
+#      $(JDK_TOPDIR)/src/macosx/native/com/apple/eio \
+#      $(JDK_TOPDIR)/src/macosx/native/apple/security \
+#      $(JDK_TOPDIR)/src/macosx/native/apple/launcher
+#
+#  $(eval $(call SetupNativeCompilation,BUILD_LIBOSX, \
+#      LIBRARY := osx, \
+#      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
+#      SRC := $(LIBOSX_DIRS), \
+#      LANG := C, \
+#      OPTIMIZATION := LOW, \
+#      CFLAGS := $(CFLAGS_JDKLIB) \
+#          $(foreach dir, $(LIBOSX_DIRS), -I$(dir)) \
+#          -I$(JDK_TOPDIR)/src/macosx/native/sun/osxapp, \
+#      LDFLAGS := $(LDFLAGS_JDKLIB) \
+#          $(call SET_SHARED_LIBRARY_ORIGIN), \
+#      LDFLAGS_SUFFIX_macosx := \
+#          -losxapp \
+#          -framework Cocoa \
+#          -framework ApplicationServices \
+#          -framework JavaNativeFoundation \
+#          -framework JavaRuntimeSupport \
+#          -framework Security \
+#          -framework SystemConfiguration \
+#          $(LDFLAGS_JDKLIB_SUFFIX), \
+#      OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libosx, \
+#      DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
+#
+#  BUILD_LIBRARIES += $(BUILD_LIBOSX)
+#
+#  $(BUILD_LIBOSX): $(BUILD_LIBOSXAPP)
+#
+#  $(BUILD_LIBOSX): $(BUILD_LIBJAVA)
+#
+#endif
 
 ##########################################################################################
 
