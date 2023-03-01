@@ -62,7 +62,7 @@ JNIEXPORT jlong JNICALL Java_com_apple_concurrent_LibDispatchNative_nativeGetMai
 JNIEXPORT jlong JNICALL Java_com_apple_concurrent_LibDispatchNative_nativeCreateConcurrentQueue
 (JNIEnv *env, jclass clazz, jint priority)
 {
-        dispatch_queue_t queue = dispatch_get_global_queue((long)priority, 0);
+        dispatch_queue_t queue = dispatch_get_concurrent_queue((long)priority);
         return ptr_to_jlong(queue);
 }
 
@@ -95,7 +95,7 @@ JNIEXPORT void JNICALL Java_com_apple_concurrent_LibDispatchNative_nativeRelease
 (JNIEnv *env, jclass clazz, jlong nativeQueue)
 {
         if (nativeQueue == 0L) return;
-        dispatch_release((dispatch_queue_t)jlong_to_ptr(nativeQueue));
+        dispatch_queue_release((dispatch_queue_t)jlong_to_ptr(nativeQueue));
 }
 
 
