@@ -152,7 +152,7 @@ JNIEXPORT jboolean JNICALL Java_sun_lwawt_macosx_LWCToolkit_nativeSyncQueue
         // could happen if we are embedded inside SWT application,
         // in this case just spin a single empty block through
         // the event loop to give it a chance to process pending events
-        [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){}];
+        [ThreadUtilities performOnMainThreadWaiting:YES block:^(){}];
     }
 
     if (([AWTToolkit getEventCount] - currentEventNum) != 0) {
@@ -259,7 +259,7 @@ BOOL doLoadNativeColors(JNIEnv *env, jintArray jColors, BOOL useAppleColors) {
     UInt32 colorsArray[len];
     UInt32 *colors = colorsArray;
 
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
+    [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
         NSUInteger i;
         for (i = 0; i < len; i++) {
             colors[i] = RGB([CSystemColors getColor:i useAppleColor:useAppleColors]);
@@ -377,7 +377,7 @@ JNIEXPORT jboolean JNICALL Java_sun_lwawt_macosx_LWCToolkit_isCapsLockOn
 (JNIEnv *env, jobject self)
 {
     __block jboolean isOn = JNI_FALSE;
-    [JNFRunLoop performOnMainThreadWaiting:YES withBlock:^(){
+    [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
         NSUInteger modifiers = [NSEvent modifierFlags];
         isOn = (modifiers & NSAlphaShiftKeyMask) != 0;
     }];

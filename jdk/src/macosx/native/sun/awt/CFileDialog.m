@@ -213,7 +213,7 @@ JNF_COCOA_ENTER(env);
                                                  canChooseDirectories:chooseDirectories
                                                               withEnv:env];
 
-    [JNFRunLoop performOnMainThread:@selector(safeSaveOrLoad)
+    [ThreadUtilities performOnMainThread:@selector(safeSaveOrLoad)
                                  on:dialogDelegate
                          withObject:nil
                       waitUntilDone:YES];

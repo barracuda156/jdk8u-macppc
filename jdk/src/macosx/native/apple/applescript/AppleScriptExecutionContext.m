@@ -150,7 +150,7 @@
     if(pthread_main_np() || useAnyThread) {
         [self invoke];
     } else {
-        [JNFRunLoop performOnMainThread:@selector(invoke) on:self withObject:nil waitUntilDone:YES];
+        [ThreadUtilities performOnMainThread:@selector(invoke) on:self withObject:nil waitUntilDone:YES];
     }
 
     // if we have an exception parked in our ivar, snarf the message (if there is one), and toss a ScriptException
