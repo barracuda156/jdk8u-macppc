@@ -744,7 +744,7 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBJPEG, \
         -I$(JDK_TOPDIR)/src/share/native/sun/awt/image/jpeg, \
     MAPFILE := $(BUILD_LIBJPEG_MAPFILE), \
     LDFLAGS := $(LDFLAGS_JDKLIB) \
-        $(call SET_SHARED_LIBRARY_ORIGIN), \
+        $(call SET_SHARED_LIBRARY_ORIGIN) -ljpeg, \
     LDFLAGS_windows := $(WIN_JAVA_LIB) jvm.lib, \
     LDFLAGS_SUFFIX := $(LDFLAGS_JDKLIB_SUFFIX), \
     VERSIONINFO_RESOURCE := $(JDK_TOPDIR)/src/windows/resource/version.rc, \
