@@ -26,6 +26,7 @@
 #import <Cocoa/Cocoa.h>
 #import <JavaNativeFoundation/JavaNativeFoundation.h>
 #import <JavaRuntimeSupport/JavaRuntimeSupport.h>
+#import <libkern/OSAtomic.h>
 
 #import "sun_lwawt_macosx_CPlatformWindow.h"
 #import "com_apple_eawt_event_GestureHandler.h"
@@ -328,20 +329,21 @@ AWT_ASSERT_APPKIT_THREAD;
 
 // Retrieves the list of possible window layers (levels)
 + (NSArray*) getWindowLayers {
-    static NSArray *windowLayers;
-    static dispatch_once_t token;
-
-    // Initialize the list of possible window layers
-    dispatch_once(&token, ^{
-        // The layers are ordered from front to back, (i.e. the toppest one is the first)
-        windowLayers = [NSArray arrayWithObjects:
+    static NSArray * volatile windowLayers = nil;
+    if(!windowLayers) {
+        @synchronized([NSArray class]) {
+            if(!windowLayers) {
+                NSArray *tmpNSArray = [NSArray arrayWithObjects:
                             [NSNumber numberWithInt:CGWindowLevelForKey(kCGPopUpMenuWindowLevelKey)],
                             [NSNumber numberWithInt:CGWindowLevelForKey(kCGFloatingWindowLevelKey)],
-                            [NSNumber numberWithInt:CGWindowLevelForKey(kCGNormalWindowLevelKey)],
-                            nil
-                       ];
-        [windowLayers retain];
-    });
+                            [NSNumber numberWithInt:CGWindowLevelForKey(kCGNormalWindowLevelKey)]
+                            ];
+                OSMemoryBarrier();
+                windowLayers = tmpNSArray;
+            }
+        }
+    }
+    OSMemoryBarrier();
     return windowLayers;
 }
 
