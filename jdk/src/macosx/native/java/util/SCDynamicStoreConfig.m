@@ -122,8 +122,11 @@ void _SCDynamicStoreCallBack(SCDynamicStoreRef store, CFArrayRef changedKeys, vo
    NSArray *keys = (NSArray *)changedKeys;
     if ([keys count] == 0) return;
     if (![keys containsObject:KERBEROS_DEFAULT_REALMS] && ![keys containsObject:KERBEROS_DEFAULT_REALM_MAPPINGS]) return;
-
+#ifndef __ppc__
     JNFPerformEnvBlock(JNFThreadDetachOnThreadDeath | JNFThreadSetSystemClassLoaderOnAttach | JNFThreadAttachAsDaemon, ^(JNIEnv *env) {
+#else
+    JNFPerformEnvBlock(JNFThreadDetachOnThreadDeath, ^(JNIEnv *env) {
+#endif /* FIXME */
         static JNF_CLASS_CACHE(jc_Config, "sun/security/krb5/Config");
         static JNF_STATIC_MEMBER_CACHE(jm_Config_refresh, jc_Config, "refresh", "()V");
         JNFCallStaticVoidMethod(env, jm_Config_refresh);

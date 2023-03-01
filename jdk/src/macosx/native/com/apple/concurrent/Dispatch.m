@@ -113,7 +113,11 @@ JNF_COCOA_ENTER(env);
 
         dispatch_fxn(queue, ^{
                 // attach the dispatch thread to the JVM if necessary, and get an env
+        #ifndef __ppc__
                 JNFThreadContext ctx = JNFThreadDetachOnThreadDeath | JNFThreadSetSystemClassLoaderOnAttach | JNFThreadAttachAsDaemon;
+        #else   // FIXME
+                JNFThreadContext ctx = JNFThreadDetachOnThreadDeath;
+        #endif
                 JNIEnv *blockEnv = JNFObtainEnv(&ctx);
 
         JNF_COCOA_ENTER(blockEnv);
