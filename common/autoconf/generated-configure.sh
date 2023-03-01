@@ -42874,7 +42874,7 @@ $as_echo "$supports" >&6; }
       # newer than the given OS version and makes the linked binaries compatible
       # even if built on a newer version of the OS.
       # The expected format is X.Y.Z
-      MACOSX_VERSION_MIN=10.7.0
+      MACOSX_VERSION_MIN=10.6.0
 
 
       # The macro takes the version with no dots, ex: 1070
