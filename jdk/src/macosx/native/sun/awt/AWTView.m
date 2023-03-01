@@ -140,7 +140,7 @@ AWT_ASSERT_APPKIT_THREAD;
     {
         JNIEnv *env = [ThreadUtilities getJNIEnvUncached];
 
-        JNFDeleteGlobalRef(env, fInputMethodLOCKABLE);
+        (*env)->DeleteGlobalRef(env, fInputMethodLOCKABLE);
         fInputMethodLOCKABLE = NULL;
     }
 
@@ -392,10 +392,6 @@ AWT_ASSERT_APPKIT_THREAD;
 
     jdouble deltaX = [event deltaX];
     jdouble deltaY = [event deltaY];
-    if ([AWTToolkit hasPreciseScrollingDeltas: event]) {
-        deltaX = [event scrollingDeltaX] * 0.1;
-        deltaY = [event scrollingDeltaY] * 0.1;
-    }
 
     static JNF_CLASS_CACHE(jc_NSEvent, "sun/lwawt/macosx/NSEvent");
     static JNF_CTOR_CACHE(jctor_NSEvent, jc_NSEvent, "(IIIIIIIIDDI)V");
@@ -1318,14 +1314,10 @@ JNF_CLASS_CACHE(jc_CInputMethod, "sun/lwawt/macosx/CInputMethod");
 
     // Get rid of the old one
     if (fInputMethodLOCKABLE) {
-        JNFDeleteGlobalRef(env, fInputMethodLOCKABLE);
+        (*env)->DeleteGlobalRef(env, fInputMethodLOCKABLE);
     }
 
-    // Save a global ref to the new input method.
-    if (inputMethod != NULL)
-        fInputMethodLOCKABLE = JNFNewGlobalRef(env, inputMethod);
-    else
-        fInputMethodLOCKABLE = NULL;
+    fInputMethodLOCKABLE = inputMethod;
 }
 
 - (void)abandonInput
@@ -1360,6 +1352,7 @@ JNF_COCOA_ENTER(env);
 
     NSRect rect = NSMakeRect(originX, originY, width, height);
     jobject cPlatformView = (*env)->NewWeakGlobalRef(env, obj);
+    CHECK_EXCEPTION();
 
     [ThreadUtilities performOnMainThreadWaiting:YES block:^(){
 
@@ -1452,7 +1445,6 @@ JNF_COCOA_ENTER(env);
 
         NSRect viewBounds = [view bounds];
         NSRect frameInWindow = [view convertRect:viewBounds toView:nil];
-        rect = [[view window] convertRectToScreen:frameInWindow];
         NSRect screenRect = [[NSScreen mainScreen] frame];
         //Convert coordinates to top-left corner origin
         rect.origin.y = screenRect.size.height - rect.origin.y - viewBounds.size.height;
@@ -1488,5 +1480,3 @@ JNF_COCOA_EXIT(env);
     
     return underMouse;
 }
-
-
