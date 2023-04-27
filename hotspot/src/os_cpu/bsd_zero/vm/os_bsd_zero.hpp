@@ -37,11 +37,19 @@
   // Atomically copy 64 bits of data
   static void atomic_copy64(volatile void *src, volatile void *dst) {
 #if defined(PPC32)
+  #if defined(__APPLE__)
+    double tmp;
+    __asm__ volatile ("lfd  %0, 0(%1)\n"
+                  "stfd %0, 0(%2)\n"
+                  : "=f"(tmp)
+                  : "b"(src), "b"(dst));
+  #else
     double tmp;
     asm volatile ("lfd  %0, 0(%1)\n"
                   "stfd %0, 0(%2)\n"
                   : "=f"(tmp)
                   : "b"(src), "b"(dst));
+  #endif
 #elif defined(S390) && !defined(_LP64)
     double tmp;
     asm volatile ("ld  %0, 0(%1)\n"
