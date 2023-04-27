@@ -65,9 +65,8 @@ AC_DEFUN_ONCE([LIB_SETUP_INIT],
     AC_MSG_CHECKING([what is not needed on MacOSX?])
     ALSA_NOT_NEEDED=yes
     PULSE_NOT_NEEDED=yes
-    X11_NOT_NEEDED=yes
     FONTCONFIG_NOT_NEEDED=yes
-    AC_MSG_RESULT([alsa pulse x11])
+    AC_MSG_RESULT([alsa pulse])
   fi
 
   if test "x$OPENJDK_TARGET_OS" = xbsd; then
