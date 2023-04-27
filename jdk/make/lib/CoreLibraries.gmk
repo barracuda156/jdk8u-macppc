@@ -77,7 +77,7 @@ else
       LANG := C, \
       CFLAGS := $(CFLAGS_JDKLIB) \
           -I$(JDK_TOPDIR)/src/share/native/java/lang/fdlibm/include, \
-      LDFLAGS := -nostdlib -r -arch x86_64, \
+      LDFLAGS := -nostdlib -r, \
       OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libfdlibm, \
       DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
 
