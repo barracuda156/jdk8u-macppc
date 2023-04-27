@@ -119,9 +119,9 @@ AC_DEFUN([PLATFORM_EXTRACT_VARS_FROM_OS],
       VAR_OS_ENV=solaris
       ;;
     *darwin*)
-      VAR_OS=macosx
+      VAR_OS=bsd
       VAR_OS_API=posix
-      VAR_OS_ENV=macosx
+      VAR_OS_ENV=bsd
       ;;
     *bsd*)
       VAR_OS=bsd
@@ -406,7 +406,7 @@ AC_DEFUN([PLATFORM_SET_RELEASE_FILE_OS_VALUES],
   fi
   if test "x$OPENJDK_TARGET_OS" = "xmacosx"; then
     REQUIRED_OS_NAME=Darwin
-    REQUIRED_OS_VERSION=11.2
+    REQUIRED_OS_VERSION=10.6
   fi
 
   AC_SUBST(REQUIRED_OS_NAME)
