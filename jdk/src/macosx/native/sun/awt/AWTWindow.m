@@ -27,6 +27,11 @@
 #import <JavaNativeFoundation/JavaNativeFoundation.h>
 #import <JavaRuntimeSupport/JavaRuntimeSupport.h>
 
+#import <AvailabilityMacros.h>
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+#import <libkern/OSAtomic.h>
+#endif
+
 #import "sun_lwawt_macosx_CPlatformWindow.h"
 #import "com_apple_eawt_event_GestureHandler.h"
 #import "com_apple_eawt_FullScreenHandler.h"
@@ -332,6 +337,23 @@ AWT_ASSERT_APPKIT_THREAD;
 
 // Retrieves the list of possible window layers (levels)
 + (NSArray*) getWindowLayers {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+    static NSArray * volatile windowLayers = nil;
+    if(!windowLayers) {
+        @synchronized([NSArray class]) {
+            if(!windowLayers) {
+                NSArray *tmpNSArray = [NSArray arrayWithObjects:
+                            [NSNumber numberWithInt:CGWindowLevelForKey(kCGPopUpMenuWindowLevelKey)],
+                            [NSNumber numberWithInt:CGWindowLevelForKey(kCGFloatingWindowLevelKey)],
+                            [NSNumber numberWithInt:CGWindowLevelForKey(kCGNormalWindowLevelKey)]
+                            ];
+                OSMemoryBarrier();
+                windowLayers = tmpNSArray;
+            }
+        }
+    }
+    OSMemoryBarrier();
+#else
     static NSArray *windowLayers;
     static dispatch_once_t token;
 
@@ -346,6 +368,7 @@ AWT_ASSERT_APPKIT_THREAD;
                        ];
         [windowLayers retain];
     });
+#endif
     return windowLayers;
 }
 
