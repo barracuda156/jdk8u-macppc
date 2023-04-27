@@ -112,6 +112,7 @@
 # include <mach-o/dyld.h>
 # include <sys/proc_info.h>
 # include <objc/objc-auto.h>
+# include <AvailabilityMacros.h>
 #endif
 
 #ifndef MAP_ANONYMOUS
@@ -687,6 +688,11 @@ objc_registerThreadWithCollector_t objc_registerThreadWithCollectorFunction = NU
 
 #ifdef __APPLE__
 static uint64_t locate_unique_thread_id(mach_port_t mach_thread_port) {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 1060 || defined __ppc__
+  uint64_t thread_id;
+  thread_id = pthread_mach_thread_np(pthread_self());
+  return thread_id;
+#else
   // Additional thread_id used to correlate threads in SA
   thread_identifier_info_data_t     m_ident_info;
   mach_msg_type_number_t            count = THREAD_IDENTIFIER_INFO_COUNT;
@@ -695,6 +701,7 @@ static uint64_t locate_unique_thread_id(mach_port_t mach_thread_port) {
               (thread_info_t) &m_ident_info, &count);
 
   return m_ident_info.thread_id;
+#endif
 }
 #endif
 
