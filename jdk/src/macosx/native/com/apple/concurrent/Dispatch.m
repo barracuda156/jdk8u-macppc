@@ -23,6 +23,8 @@
  * questions.
  */
 
+#include <AvailabilityMacros.h>
+
 #import "com_apple_concurrent_LibDispatchNative.h"
 
 #import <dispatch/dispatch.h>
@@ -62,7 +64,11 @@ JNIEXPORT jlong JNICALL Java_com_apple_concurrent_LibDispatchNative_nativeGetMai
 JNIEXPORT jlong JNICALL Java_com_apple_concurrent_LibDispatchNative_nativeCreateConcurrentQueue
 (JNIEnv *env, jclass clazz, jint priority)
 {
+    #if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+        dispatch_queue_t queue = dispatch_get_concurrent_queue((long)priority);
+    #else
         dispatch_queue_t queue = dispatch_get_global_queue((long)priority, 0);
+    #endif
         return ptr_to_jlong(queue);
 }
 
@@ -95,7 +101,11 @@ JNIEXPORT void JNICALL Java_com_apple_concurrent_LibDispatchNative_nativeRelease
 (JNIEnv *env, jclass clazz, jlong nativeQueue)
 {
         if (nativeQueue == 0L) return;
+    #if MAC_OS_X_VERSION_MAX_ALLOWED < 1070
+        dispatch_queue_release((dispatch_queue_t)jlong_to_ptr(nativeQueue));
+    #else
         dispatch_release((dispatch_queue_t)jlong_to_ptr(nativeQueue));
+    #endif
 }
 
 
