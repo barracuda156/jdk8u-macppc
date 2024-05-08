@@ -73,10 +73,8 @@ ifneq ($(OPENJDK_TARGET_OS), windows)
     GENSRC += $(GENSRC_OSX_ICONS)
   endif
 
-  ifneq ($(OPENJDK_TARGET_OS), macosx)
-    include gensrc/GensrcX11Wrappers.gmk
-    GENSRC += $(GENSRC_X11WRAPPERS)
-  endif
+  include gensrc/GensrcX11Wrappers.gmk
+  GENSRC += $(GENSRC_X11WRAPPERS)
 endif
 
 include gensrc/GensrcCLDR.gmk
