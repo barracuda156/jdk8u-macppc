@@ -24,6 +24,7 @@
  */
 
 #import <JavaNativeFoundation/JavaNativeFoundation.h>
+#include <AvailabilityMacros.h>
 
 #import "java_awt_Font.h"
 #import "sun_awt_PlatformFont.h"
@@ -398,6 +399,7 @@ Java_sun_font_CFontManager_loadNativeFonts
 
     jint num = 0;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED > 1050 && !defined(__ppc__)
 JNF_COCOA_ENTER(env);
 
     NSArray *filteredFonts = GetFilteredFonts();
@@ -415,6 +417,7 @@ JNF_COCOA_ENTER(env);
     }
 
 JNF_COCOA_EXIT(env);
+#endif
 }
 
 /*
@@ -426,6 +429,7 @@ JNIEXPORT void JNICALL
 Java_sun_font_CFontManager_loadNativeDirFonts
 (JNIEnv *env, jclass clz, jstring filename)
 {
+#if MAC_OS_X_VERSION_MIN_REQUIRED > 1050 && !defined(__ppc__)
 JNF_COCOA_ENTER(env);
 
     NSString *nsFilePath = JNFJavaToNSString(env, filename);
@@ -442,6 +446,7 @@ JNF_COCOA_ENTER(env);
     }
 
 JNF_COCOA_EXIT(env);
+#endif
 }
 
 #pragma mark --- sun.font.CFont JNI ---
@@ -547,6 +552,7 @@ Java_sun_font_CFont_createNativeFont
 {
     AWTFont *awtFont = nil;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED > 1050 && !defined(__ppc__)
 JNF_COCOA_ENTER(env);
 
     awtFont =
@@ -558,6 +564,7 @@ JNF_COCOA_ENTER(env);
     }
 
 JNF_COCOA_EXIT(env);
+#endif
 
     return ptr_to_jlong(awtFont);
 }
@@ -572,6 +579,7 @@ Java_sun_font_CFont_getWidthNative
     (JNIEnv *env, jobject cfont, jlong awtFontPtr)
 {
     float widthVal;
+#if MAC_OS_X_VERSION_MIN_REQUIRED > 1050 && !defined(__ppc__)
 JNF_COCOA_ENTER(env);
 
     AWTFont *awtFont = (AWTFont *)jlong_to_ptr(awtFontPtr);
@@ -582,6 +590,7 @@ JNF_COCOA_ENTER(env);
     widthVal = (float)[width floatValue];
 
 JNF_COCOA_EXIT(env);
+#endif
    return (jfloat)widthVal;
 }
 

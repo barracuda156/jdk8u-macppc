@@ -305,7 +305,9 @@ static int (*main_fptr)(int argc, char **argv) = NULL;
  */
 static void *apple_main (void *arg)
 {
+#ifndef __POWERPC__
     objc_registerThreadWithCollector();
+#endif
 
     if (main_fptr == NULL) {
         main_fptr = (int (*)())dlsym(RTLD_DEFAULT, "main");
@@ -921,7 +923,9 @@ JLI_GetJavaVMInstance()
 void
 RegisterThread()
 {
+#ifndef __POWERPC__
     objc_registerThreadWithCollector();
+#endif
 }
 
 static void

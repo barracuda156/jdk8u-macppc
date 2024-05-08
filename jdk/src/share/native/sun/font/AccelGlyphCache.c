@@ -24,6 +24,8 @@
  */
 
 #include <stdlib.h>
+#include <AvailabilityMacros.h>
+
 #include "jni.h"
 #include "AccelGlyphCache.h"
 #include "Trace.h"
@@ -66,12 +68,16 @@ AccelGlyphCache_Init(jint width, jint height,
 {
     GlyphCacheInfo *gcinfo;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED > 1050 && !defined(__ppc__)
     J2dTraceLn(J2D_TRACE_INFO, "AccelGlyphCache_Init");
+#endif
 
     gcinfo = (GlyphCacheInfo *)malloc(sizeof(GlyphCacheInfo));
     if (gcinfo == NULL) {
+#if MAC_OS_X_VERSION_MIN_REQUIRED > 1050 && !defined(__ppc__)
         J2dRlsTraceLn(J2D_TRACE_ERROR,
             "AccelGlyphCache_Init: could not allocate GlyphCacheInfo");
+#endif
         return NULL;
     }
 
