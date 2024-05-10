@@ -4837,10 +4837,6 @@ int os::fork_and_exec(char* cmd, bool use_vfork_if_available) {
 // as libawt.so, and renamed libawt_xawt.so
 //
 bool os::is_headless_jre() {
-#ifdef __APPLE__
-    // We no longer build headless-only on Mac OS X
-    return false;
-#else
     struct stat statbuf;
     char buf[MAXPATHLEN];
     char libmawtpath[MAXPATHLEN];
@@ -4872,7 +4868,6 @@ bool os::is_headless_jre() {
     if (::stat(libmawtpath, &statbuf) == 0) return false;
 
     return true;
-#endif
 }
 
 // Get the default path to the core file
