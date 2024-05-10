@@ -940,11 +940,11 @@ $(eval $(call SetupNativeCompilation,BUILD_LIBFONTMANAGER, \
         $(subst -Wl$(COMMA)-z$(COMMA)defs,,$(LDFLAGS_JDKLIB))) $(LDFLAGS_CXX_JDK) \
         $(call SET_SHARED_LIBRARY_ORIGIN), \
     LDFLAGS_SUFFIX := $(BUILD_LIBFONTMANAGER_FONTLIB), \
-    LDFLAGS_SUFFIX_linux := -lawt $(LIBM) $(LIBCXX) -ljava -ljvm -lc, \
-    LDFLAGS_SUFFIX_solaris := -lawt -lawt_headless -lc $(LIBM) $(LIBCXX) -ljava -ljvm, \
+    LDFLAGS_SUFFIX_posix := $(LIBM) $(LIBCXX) -lfontmanager -ljava -ljvm -lc, \
+    LDFLAGS_SUFFIX_solaris := -lawt, \
     LDFLAGS_SUFFIX_aix := -lawt -lawt_headless $(LIBM) $(LIBCXX) -ljava -ljvm,\
-    LDFLAGS_SUFFIX_macosx := -lawt $(LIBM) $(LIBCXX) -undefined dynamic_lookup \
-        -ljava -ljvm, \
+#    LDFLAGS_SUFFIX_macosx := -lawt $(LIBM) $(LIBCXX) -undefined dynamic_lookup \
+#        -ljava -ljvm, \
     LDFLAGS_SUFFIX_windows := $(WIN_JAVA_LIB) advapi32.lib user32.lib gdi32.lib \
         $(WIN_AWT_LIB), \
     VERSIONINFO_RESOURCE := $(JDK_TOPDIR)/src/windows/resource/version.rc, \
@@ -1099,11 +1099,11 @@ else # OPENJDK_TARGET_OS not windows
       OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libjawt, \
       DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
 
-  ifndef BUILD_HEADLESS_ONLY
-    $(BUILD_LIBJAWT): $(BUILD_LIBAWT_XAWT)
-  else
+#  ifndef BUILD_HEADLESS_ONLY
+#    $(BUILD_LIBJAWT): $(BUILD_LIBAWT_XAWT)
+#  else
     $(BUILD_LIBJAWT): $(INSTALL_LIBRARIES_HERE)/$(LIBRARY_PREFIX)awt_headless$(SHARED_LIBRARY_SUFFIX)
-  endif
+#  endif
 
 endif # OPENJDK_TARGET_OS
 
@@ -1148,74 +1148,74 @@ endif
 
 ##########################################################################################
 
-ifndef BUILD_HEADLESS_ONLY
-  LIBSPLASHSCREEN_DIRS := \
-    $(JDK_TOPDIR)/src/share/native/sun/awt/image/jpeg \
-    $(JDK_TOPDIR)/src/share/native/sun/awt/libpng \
-    $(JDK_TOPDIR)/src/share/native/sun/awt/splashscreen
-
-  ifeq ($(USE_EXTERNAL_LIBGIF), true)
-    GIFLIB_LDFLAGS := -lgif
-  else
-    LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/share/native/sun/awt/giflib
-    GIFLIB_CFLAGS := -I$(JDK_TOPDIR)/src/share/native/sun/awt/giflib
-  endif
-
-  LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/$(OPENJDK_TARGET_OS_API_DIR)/native/sun/awt/splashscreen
-
-  LIBSPLASHSCREEN_CFLAGS := -DSPLASHSCREEN -DPNG_NO_MMX_CODE \
-      -DPNG_ARM_NEON_OPT=0 -DPNG_ARM_NEON_IMPLEMENTATION=0 \
-      $(foreach dir, $(LIBSPLASHSCREEN_DIRS), -I$(dir))
-
-  ifeq ($(OPENJDK_TARGET_OS), linux)
-    ifeq ($(OPENJDK_TARGET_CPU_ARCH), ppc)
-      LIBSPLASHSCREEN_CFLAGS += -DPNG_POWERPC_VSX_OPT=0
-    endif
-  endif
-
-  ifeq ($(OPENJDK_TARGET_OS), windows)
-    LIBSPLASHSCREEN_CFLAGS += -DWITH_WIN32
-  else
-    LIBSPLASHSCREEN_CFLAGS += -DWITH_X11 $(X_CFLAGS)
-  endif
-
-  LIBSPLASHSCREEN_LDFLAGS_SUFFIX :=
-
-  ifneq ($(USE_EXTERNAL_LIBZ), true)
-    LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/share/native/java/util/zip/zlib
-    LIBSPLASHSCREEN_CFLAGS += $(ZLIB_CPPFLAGS)
-  endif
-
-  ifeq ($(OPENJDK_TARGET_OS), windows)
-    LIBSPLASHSCREEN_LDFLAGS_SUFFIX += kernel32.lib user32.lib gdi32.lib delayimp.lib -DELAYLOAD:user32.dll
-  else
-    LIBSPLASHSCREEN_LDFLAGS_SUFFIX += $(X_LIBS) -lX11 -lXext $(LIBM) -lpthread -liconv
-  endif
-
-  $(eval $(call SetupNativeCompilation,LIBSPLASHSCREEN, \
-      LIBRARY := splashscreen, \
-      OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
-      SRC := $(LIBSPLASHSCREEN_DIRS), \
-      EXCLUDE_FILES := imageioJPEG.c jpegdecoder.c pngtest.c, \
-      LANG := C, \
-      OPTIMIZATION := LOW, \
-      CFLAGS := $(LIBSPLASHSCREEN_CFLAGS) $(CFLAGS_JDKLIB) $(GIFLIB_CFLAGS), \
-      MAPFILE := $(JDK_TOPDIR)/make/mapfiles/libsplashscreen/mapfile-vers, \
-      LDFLAGS := $(LDFLAGS_JDKLIB) \
-          $(call SET_SHARED_LIBRARY_ORIGIN), \
-      LDFLAGS_SUFFIX := $(LIBSPLASHSCREEN_LDFLAGS_SUFFIX) $(LIBZ) $(GIFLIB_LDFLAGS), \
-      LDFLAGS_SUFFIX_solaris := -lc, \
-      VERSIONINFO_RESOURCE := $(JDK_TOPDIR)/src/windows/resource/version.rc, \
-      RC_FLAGS := $(RC_FLAGS) \
-          -D "JDK_FNAME=splashscreen.dll" \
-          -D "JDK_INTERNAL_NAME=splashscreen" \
-          -D "JDK_FTYPE=0x2L", \
-      OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libsplashscreen, \
-      DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
-
-  BUILD_LIBRARIES += $(LIBSPLASHSCREEN)
-
-endif
+# ifndef BUILD_HEADLESS_ONLY
+#   LIBSPLASHSCREEN_DIRS := \
+#     $(JDK_TOPDIR)/src/share/native/sun/awt/image/jpeg \
+#     $(JDK_TOPDIR)/src/share/native/sun/awt/libpng \
+#     $(JDK_TOPDIR)/src/share/native/sun/awt/splashscreen
+# 
+#   ifeq ($(USE_EXTERNAL_LIBGIF), true)
+#     GIFLIB_LDFLAGS := -lgif
+#   else
+#     LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/share/native/sun/awt/giflib
+#     GIFLIB_CFLAGS := -I$(JDK_TOPDIR)/src/share/native/sun/awt/giflib
+#   endif
+# 
+#   LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/$(OPENJDK_TARGET_OS_API_DIR)/native/sun/awt/splashscreen
+# 
+#   LIBSPLASHSCREEN_CFLAGS := -DSPLASHSCREEN -DPNG_NO_MMX_CODE \
+#       -DPNG_ARM_NEON_OPT=0 -DPNG_ARM_NEON_IMPLEMENTATION=0 \
+#       $(foreach dir, $(LIBSPLASHSCREEN_DIRS), -I$(dir))
+# 
+#   ifeq ($(OPENJDK_TARGET_OS), linux)
+#     ifeq ($(OPENJDK_TARGET_CPU_ARCH), ppc)
+#       LIBSPLASHSCREEN_CFLAGS += -DPNG_POWERPC_VSX_OPT=0
+#     endif
+#   endif
+# 
+#   ifeq ($(OPENJDK_TARGET_OS), windows)
+#     LIBSPLASHSCREEN_CFLAGS += -DWITH_WIN32
+#   else
+#     LIBSPLASHSCREEN_CFLAGS += -DWITH_X11 $(X_CFLAGS)
+#   endif
+# 
+#   LIBSPLASHSCREEN_LDFLAGS_SUFFIX :=
+# 
+#   ifneq ($(USE_EXTERNAL_LIBZ), true)
+#     LIBSPLASHSCREEN_DIRS += $(JDK_TOPDIR)/src/share/native/java/util/zip/zlib
+#     LIBSPLASHSCREEN_CFLAGS += $(ZLIB_CPPFLAGS)
+#   endif
+# 
+#   ifeq ($(OPENJDK_TARGET_OS), windows)
+#     LIBSPLASHSCREEN_LDFLAGS_SUFFIX += kernel32.lib user32.lib gdi32.lib delayimp.lib -DELAYLOAD:user32.dll
+#   else
+#     LIBSPLASHSCREEN_LDFLAGS_SUFFIX += $(X_LIBS) -lX11 -lXext $(LIBM) -lpthread -liconv
+#   endif
+# 
+#   $(eval $(call SetupNativeCompilation,LIBSPLASHSCREEN, \
+#       LIBRARY := splashscreen, \
+#       OUTPUT_DIR := $(INSTALL_LIBRARIES_HERE), \
+#       SRC := $(LIBSPLASHSCREEN_DIRS), \
+#       EXCLUDE_FILES := imageioJPEG.c jpegdecoder.c pngtest.c, \
+#       LANG := C, \
+#       OPTIMIZATION := LOW, \
+#       CFLAGS := $(LIBSPLASHSCREEN_CFLAGS) $(CFLAGS_JDKLIB) $(GIFLIB_CFLAGS), \
+#       MAPFILE := $(JDK_TOPDIR)/make/mapfiles/libsplashscreen/mapfile-vers, \
+#       LDFLAGS := $(LDFLAGS_JDKLIB) \
+#           $(call SET_SHARED_LIBRARY_ORIGIN), \
+#       LDFLAGS_SUFFIX := $(LIBSPLASHSCREEN_LDFLAGS_SUFFIX) $(LIBZ) $(GIFLIB_LDFLAGS), \
+#       LDFLAGS_SUFFIX_solaris := -lc, \
+#       VERSIONINFO_RESOURCE := $(JDK_TOPDIR)/src/windows/resource/version.rc, \
+#       RC_FLAGS := $(RC_FLAGS) \
+#           -D "JDK_FNAME=splashscreen.dll" \
+#           -D "JDK_INTERNAL_NAME=splashscreen" \
+#           -D "JDK_FTYPE=0x2L", \
+#       OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libsplashscreen, \
+#       DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
+# 
+#   BUILD_LIBRARIES += $(LIBSPLASHSCREEN)
+# 
+# endif
 
 ##########################################################################################
 
