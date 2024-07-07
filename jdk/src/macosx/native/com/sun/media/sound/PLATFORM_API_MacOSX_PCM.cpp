@@ -31,6 +31,7 @@
 #include <AudioToolbox/AudioConverter.h>
 #include <pthread.h>
 #include <math.h>
+#include <AvailabilityMacros.h>
 /*
 #if !defined(__COREAUDIO_USE_FLAT_INCLUDES__)
 #include <CoreAudio/CoreAudioTypes.h>
@@ -620,7 +621,9 @@ struct OSX_DirectAudioDevice {
 
     ~OSX_DirectAudioDevice() {
         if (audioUnit) {
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1070
             AudioComponentInstanceDispose(audioUnit);
+#endif
         }
         if (resampler) {
             delete resampler;
@@ -630,6 +633,7 @@ struct OSX_DirectAudioDevice {
 
 static AudioUnit CreateOutputUnit(AudioDeviceID deviceID, int isSource)
 {
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1070
     OSStatus err;
     AudioUnit unit;
 
@@ -683,6 +687,9 @@ static AudioUnit CreateOutputUnit(AudioDeviceID deviceID, int isSource)
     }
 
     return unit;
+#else
+    return NULL;
+#endif
 }
 
 static OSStatus OutputCallback(void                         *inRefCon,

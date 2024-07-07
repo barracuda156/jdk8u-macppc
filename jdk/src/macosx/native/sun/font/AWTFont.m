@@ -397,24 +397,6 @@ Java_sun_font_CFontManager_loadNativeFonts
                             "(Ljava/lang/String;Ljava/lang/String;)V");
 
     jint num = 0;
-
-JNF_COCOA_ENTER(env);
-
-    NSArray *filteredFonts = GetFilteredFonts();
-    num = (jint)[filteredFonts count];
-
-    jint i;
-    for (i = 0; i < num; i++) {
-        NSString *fontname = [filteredFonts objectAtIndex:i];
-        jobject jFontName = JNFNSToJavaString(env, fontname);
-        jobject jFontFamilyName =
-            JNFNSToJavaString(env, GetFamilyNameForFontName(fontname));
-
-        JNFCallVoidMethod(env, jthis,
-                          jm_registerFont, jFontName, jFontFamilyName);
-    }
-
-JNF_COCOA_EXIT(env);
 }
 
 /*
@@ -426,22 +408,7 @@ JNIEXPORT void JNICALL
 Java_sun_font_CFontManager_loadNativeDirFonts
 (JNIEnv *env, jclass clz, jstring filename)
 {
-JNF_COCOA_ENTER(env);
 
-    NSString *nsFilePath = JNFJavaToNSString(env, filename);
-
-    FSRef iFile;
-    OSStatus status = CreateFSRef(&iFile, nsFilePath);
-
-    if (status == noErr) {
-        ATSFontContainerRef oContainer;
-        status = ATSFontActivateFromFileReference(&iFile, kATSFontContextLocal,
-                                                  kATSFontFormatUnspecified,
-                                                  NULL, kNilOptions,
-                                                  &oContainer);
-    }
-
-JNF_COCOA_EXIT(env);
 }
 
 #pragma mark --- sun.font.CFont JNI ---
@@ -488,49 +455,6 @@ Java_sun_font_CFont_getTableBytesNative
      jlong awtFontPtr, jint jtag)
 {
     jbyteArray jbytes = NULL;
-JNF_COCOA_ENTER(env);
-
-    CTFontTableTag tag = (CTFontTableTag)jtag;
-    int i, found = 0;
-    AWTFont *awtFont = (AWTFont *)jlong_to_ptr(awtFontPtr);
-    NSFont* nsFont = awtFont->fFont;
-    CTFontRef ctfont = (CTFontRef)nsFont;
-    CFArrayRef tagsArray =
-        CTFontCopyAvailableTables(ctfont, kCTFontTableOptionNoOptions);
-    CFIndex numTags = CFArrayGetCount(tagsArray);
-    for (i=0; i<numTags; i++) {
-        if (tag ==
-            (CTFontTableTag)(uintptr_t)CFArrayGetValueAtIndex(tagsArray, i)) {
-            found = 1;
-            break;
-        }
-    }
-    CFRelease(tagsArray);
-    if (!found) {
-        return NULL;
-    }
-    CFDataRef table = CTFontCopyTable(ctfont, tag, kCTFontTableOptionNoOptions);
-    if (table == NULL) {
-        return NULL;
-    }
-
-    char *tableBytes = (char*)(CFDataGetBytePtr(table));
-    size_t tableLength = CFDataGetLength(table);
-    if (tableBytes == NULL || tableLength == 0) {
-        CFRelease(table);
-        return NULL;
-    }
-
-    jbytes = (*env)->NewByteArray(env, (jsize)tableLength);
-    if (jbytes == NULL) {
-        return NULL;
-    }
-    (*env)->SetByteArrayRegion(env, jbytes, 0,
-                               (jsize)tableLength,
-                               (jbyte*)tableBytes);
-    CFRelease(table);
-
-JNF_COCOA_EXIT(env);
 
     return jbytes;
 }
@@ -547,18 +471,6 @@ Java_sun_font_CFont_createNativeFont
 {
     AWTFont *awtFont = nil;
 
-JNF_COCOA_ENTER(env);
-
-    awtFont =
-        [AWTFont awtFontForName:JNFJavaToNSString(env, nativeFontName)
-         style:style]; // autoreleased
-
-    if (awtFont) {
-        CFRetain(awtFont); // GC
-    }
-
-JNF_COCOA_EXIT(env);
-
     return ptr_to_jlong(awtFont);
 }
 
@@ -572,17 +484,8 @@ Java_sun_font_CFont_getWidthNative
     (JNIEnv *env, jobject cfont, jlong awtFontPtr)
 {
     float widthVal;
-JNF_COCOA_ENTER(env);
 
-    AWTFont *awtFont = (AWTFont *)jlong_to_ptr(awtFontPtr);
-    NSFont* nsFont = awtFont->fFont;
-    NSFontDescriptor *fontDescriptor = nsFont.fontDescriptor;
-    NSDictionary *fontTraits = [fontDescriptor objectForKey : NSFontTraitsAttribute];
-    NSNumber *width = [fontTraits objectForKey : NSFontWidthTrait];
-    widthVal = (float)[width floatValue];
-
-JNF_COCOA_EXIT(env);
-   return (jfloat)widthVal;
+    return (jfloat)widthVal;
 }
 
 /*

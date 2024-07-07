@@ -3842,7 +3842,7 @@ int os::active_processor_count() {
 }
 
 void os::set_native_thread_name(const char *name) {
-#if defined(__APPLE__) && MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
+#if defined(__APPLE__) && (MAC_OS_X_VERSION_MIN_REQUIRED > 1050) && !defined(__ppc__)
   // This is only supported in Snow Leopard and beyond
   if (name != NULL) {
     // Add a "Java: " prefix to the name
@@ -3850,6 +3850,8 @@ void os::set_native_thread_name(const char *name) {
     snprintf(buf, sizeof(buf), "Java: %s", name);
     pthread_setname_np(buf);
   }
+#else
+  return;
 #endif
 }
 

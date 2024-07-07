@@ -51,8 +51,8 @@ SOURCES  = symtab.c     \
 OBJS    = $(SOURCES:.c=.o)
 OBJSPLUS = MacosxDebuggerLocal.o sadis.o $(OBJS)
 EXTINCLUDE = -I.
-EXTCFLAGS = -m64 -D__APPLE__ -framework JavaNativeFoundation
-FOUNDATIONFLAGS = -framework Foundation -framework JavaNativeFoundation -framework Security -framework CoreFoundation
+EXTCFLAGS = -D__APPLE__
+FOUNDATIONFLAGS = -framework Foundation -framework Security -framework CoreFoundation
 LIBSA = $(ARCH)/libsaproc.dylib
 endif   # Darwin
 
