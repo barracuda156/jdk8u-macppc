@@ -23,7 +23,7 @@
 # questions.
 #
 
-ifeq ($(OPENJDK_TARGET_OS), macosx)
+ifeq ($(OPENJDK_TARGET_OS), macosx_lion_up)
 
   $(eval $(call SetupNativeCompilation,BUILD_LIBAPPLESCRIPTENGINE, \
       LIBRARY := AppleScriptEngine, \
@@ -37,7 +37,6 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
           $(call SET_SHARED_LIBRARY_ORIGIN), \
       LDFLAGS_SUFFIX := -framework Cocoa \
           -framework Carbon \
-          -framework JavaNativeFoundation \
           $(LDFLAGS_JDKLIB_SUFFIX), \
       OBJECT_DIR := $(JDK_OUTPUTDIR)/objs/libAppleScriptEngine, \
       DEBUG_SYMBOLS := $(DEBUG_ALL_BINARIES)))
@@ -50,7 +49,7 @@ endif
 
 ##########################################################################################
 
-ifeq ($(OPENJDK_TARGET_OS), macosx)
+ifeq ($(OPENJDK_TARGET_OS), macosx_lion_up)
 
   $(eval $(call SetupNativeCompilation,BUILD_LIBOSXAPP, \
       LIBRARY := osxapp, \
@@ -71,8 +70,6 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
           -framework Cocoa \
           -framework Security \
           -framework ExceptionHandling \
-          -framework JavaNativeFoundation \
-          -framework JavaRuntimeSupport \
           -framework OpenGL \
           -framework IOSurface \
           -framework QuartzCore, \
@@ -85,7 +82,7 @@ endif
 
 ##########################################################################################
 
-ifeq ($(OPENJDK_TARGET_OS), macosx)
+ifeq ($(OPENJDK_TARGET_OS), macosx_lion_up)
 
   LIBOSX_DIRS := \
       $(JDK_TOPDIR)/src/macosx/native/com/apple/concurrent \
@@ -109,8 +106,6 @@ ifeq ($(OPENJDK_TARGET_OS), macosx)
           -losxapp \
           -framework Cocoa \
           -framework ApplicationServices \
-          -framework JavaNativeFoundation \
-          -framework JavaRuntimeSupport \
           -framework Security \
           -framework SystemConfiguration \
           $(LDFLAGS_JDKLIB_SUFFIX), \

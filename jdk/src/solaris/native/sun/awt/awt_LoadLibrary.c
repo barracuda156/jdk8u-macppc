@@ -85,13 +85,13 @@ JNIEXPORT jboolean JNICALL AWTIsHeadless() {
  * Pathnames to the various awt toolkits
  */
 
-#ifdef MACOSX
+#if defined(MACOSX) && !defined(__POWERPC__)
   #define LWAWT_PATH "/libawt_lwawt.dylib"
   #define DEFAULT_PATH LWAWT_PATH
 #else
-  #define XAWT_PATH "/libawt_xawt.so"
+  #define XAWT_PATH "/libawt_xawt.dylib"
   #define DEFAULT_PATH XAWT_PATH
-  #define HEADLESS_PATH "/libawt_headless.so"
+  #define HEADLESS_PATH "/libawt_headless.dylib"
 #endif
 
 jint
@@ -130,7 +130,7 @@ AWT_OnLoad(JavaVM *vm, void *reserved)
     fmProp = (*env)->NewStringUTF(env, "sun.font.fontmanager");
     CHECK_EXCEPTION_FATAL(env, "Could not allocate font manager property");
 
-#ifdef MACOSX
+#if defined(MACOSX) && !defined(__POWERPC__)
         fmanager = (*env)->NewStringUTF(env, "sun.font.CFontManager");
         tk = LWAWT_PATH;
 #else
@@ -146,7 +146,7 @@ AWT_OnLoad(JavaVM *vm, void *reserved)
         CHECK_EXCEPTION_FATAL(env, "Could not allocate set properties");
     }
 
-#ifndef MACOSX
+#if !defined(MACOSX) || defined(__POWERPC__)
     if (AWTIsHeadless()) {
         tk = HEADLESS_PATH;
     }
