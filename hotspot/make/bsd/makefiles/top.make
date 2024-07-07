@@ -98,14 +98,14 @@ jvmti_stuff: $(Cached_plat) $(adjust-mflags)
 jfr_stuff: $(Cached_plat) $(adjust-mflags)
 	@$(MAKE) -f jfr.make $(MFLAGS-adjusted)
 
-ifeq ($(OS_VENDOR), Darwin)
+# ifeq ($(OS_VENDOR), Darwin)
 # generate dtrace header files
-dtrace_stuff: $(Cached_plat) $(adjust-mflags)
-	@$(MAKE) -f dtrace.make dtrace_stuff $(MFLAGS-adjusted) GENERATED=$(GENERATED)
-else
+# dtrace_stuff: $(Cached_plat) $(adjust-mflags)
+#	@$(MAKE) -f dtrace.make dtrace_stuff $(MFLAGS-adjusted) GENERATED=$(GENERATED)
+# else
 dtrace_stuff:
 	@# We need a null action here, so implicit rules don't get consulted.
-endif
+# endif
 
 # generate SA jar files and native header
 sa_stuff:
