@@ -46,7 +46,7 @@ class JNITypes : AllStatic {
  private:
 
 #ifndef PPC64
-#error "ppc32 support currently not implemented!!!"
+#pragma GCC warning "ppc32 support currently not implemented!"
 #endif // PPC64
 
  public:
