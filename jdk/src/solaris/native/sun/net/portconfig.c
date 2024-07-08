@@ -93,9 +93,7 @@ static int getPortRange(struct portrange *range)
  * Method:    getLower0
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_sun_net_PortConfig_getLower0
-  (JNIEnv *env, jclass clazz)
-{
+JNIEXPORT jint JNICALL Java_sun_net_PortConfig_getLower0 (JNIEnv *env, jclass clazz) {
     struct portrange range;
     if (getPortRange(&range) < 0) {
         return -1;
@@ -108,9 +106,7 @@ JNIEXPORT jint JNICALL Java_sun_net_PortConfig_getLower0
  * Method:    getUpper0
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_sun_net_PortConfig_getUpper0
-  (JNIEnv *env, jclass clazz)
-{
+JNIEXPORT jint JNICALL Java_sun_net_PortConfig_getUpper0 (JNIEnv *env, jclass clazz) {
     struct portrange range;
     if (getPortRange(&range) < 0) {
         return -1;
