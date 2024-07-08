@@ -239,6 +239,8 @@ static char cpu_arch[] = "amd64";
 static char cpu_arch[] = "arm";
 #elif defined(PPC32)
 static char cpu_arch[] = "ppc";
+#elif defined(PPC64)
+static char cpu_arch[] = "ppc64";
 #elif defined(SPARC)
 #  ifdef _LP64
 static char cpu_arch[] = "sparcv9";
