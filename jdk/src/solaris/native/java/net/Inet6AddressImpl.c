@@ -54,6 +54,9 @@
 #define NI_MAXHOST 1025
 #endif
 
+#if defined(__GNUC__) && !defined(__private_extern__)
+#define __private_extern__ __attribute__((visibility("hidden")))
+#endif
 
 /************************************************************************
  * Inet6AddressImpl

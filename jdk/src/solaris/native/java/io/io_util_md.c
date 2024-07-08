@@ -43,6 +43,10 @@
 #include <sys/ioctl.h>
 #endif
 
+#if defined(__GNUC__) && !defined(__private_extern__)
+#define __private_extern__ __attribute__((visibility("hidden")))
+#endif
+
 #ifdef MACOSX
 
 #include <CoreFoundation/CoreFoundation.h>
