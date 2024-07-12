@@ -1080,10 +1080,6 @@ else # OPENJDK_TARGET_OS not windows
   endif
 
   JAWT_FILES := jawt.c
-  ifeq ($(OPENJDK_TARGET_OS), macosx)
-    JAWT_FILES := jawt.m
-    JAWT_LIBS := -lawt_lwawt
-  endif
 
   $(eval $(call SetupNativeCompilation,BUILD_LIBJAWT, \
       LIBRARY := jawt, \
