@@ -28,7 +28,7 @@ $(eval $(call FillCacheFind, $(JDK_TOPDIR)/make/src/classes))
 
 TOOLS_SRC := $(JDK_TOPDIR)/make/src/classes
 
-ifeq ($(findstring $(OPENJDK_TARGET_OS),windows macosx),)
+ifneq ($(OPENJDK_TARGET_OS), windows)
   TOOLS_SRC += $(JDK_TOPDIR)/src/solaris/classes/sun/awt/X11/generator
 endif
 
