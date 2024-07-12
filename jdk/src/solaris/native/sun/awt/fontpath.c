@@ -23,7 +23,7 @@
  * questions.
  */
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(MACOSX)
 #include <string.h>
 #endif /* __linux__ */
 #include <stdio.h>
@@ -59,8 +59,20 @@
 extern Display *awt_display;
 #endif /* !HEADLESS */
 
+#ifdef MACOSX
+
+// XXXDARWIN: Hard-code the path to fontconfig, as it is
+// not included in the dyld search path by default, and 10.4
+// does not support -rpath.
+// This ignores the build time setting of ALT_FREETYPE_LIB_PATH,
+// and should be replaced with -rpath/@rpath support on 10.5 or later,
+// or via support for a the FREETYPE_LIB_PATH define.
+#define FONTCONFIG_DLL_VERSIONED X11_PATH "/lib/" VERSIONED_JNI_LIB_NAME("fontconfig", "1")
+#define FONTCONFIG_DLL X11_PATH "/lib/" JNI_LIB_NAME("fontconfig")
+#else
 #define FONTCONFIG_DLL_VERSIONED VERSIONED_JNI_LIB_NAME("fontconfig", "1")
 #define FONTCONFIG_DLL JNI_LIB_NAME("fontconfig")
+#endif
 
 #define MAXFDIRS 512    /* Max number of directories that contain fonts */
 
@@ -111,6 +123,23 @@ static char *fullSolarisFontPath[] = {
     OPENWINHOMELIB "locale/iso_8859_9/X11/fonts/Type1",
     OPENWINHOMELIB "locale/iso_8859_13/X11/fonts/Type1",
     OPENWINHOMELIB "locale/ar/X11/fonts/Type1",
+    NULL, /* terminates the list */
+};
+
+#elif defined(MACOSX)
+static char *full_MACOSX_X11FontPath[] = {
+    X11_PATH "/lib/X11/fonts/TrueType",
+    X11_PATH "/lib/X11/fonts/truetype",
+    X11_PATH "/lib/X11/fonts/tt",
+    X11_PATH "/lib/X11/fonts/TTF",
+    X11_PATH "/lib/X11/fonts/OTF",
+    PACKAGE_PATH "/share/fonts/TrueType",
+    PACKAGE_PATH "/share/fonts/truetype",
+    PACKAGE_PATH "/share/fonts/tt",
+    PACKAGE_PATH "/share/fonts/TTF",
+    PACKAGE_PATH "/share/fonts/OTF",
+    X11_PATH "/lib/X11/fonts/Type1",
+    PACKAGE_PATH "/share/fonts/Type1",
     NULL, /* terminates the list */
 };
 
@@ -381,7 +410,7 @@ static char **getX11FontPath ()
 
 #endif /* !HEADLESS */
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(MACOSX)
 /* from awt_LoadLibrary.c */
 JNIEXPORT jboolean JNICALL AWTIsHeadless();
 #endif
@@ -508,6 +537,8 @@ static char *getPlatformFontPathChars(JNIEnv *env, jboolean noType1, jboolean is
 
 #if defined(__linux__)
     knowndirs = fullLinuxFontPath;
+#elif defined(MACOSX)
+    knowndirs = full_MACOSX_X11FontPath;
 #elif defined(__solaris__)
     knowndirs = fullSolarisFontPath;
 #elif defined(_AIX)
@@ -520,7 +551,7 @@ static char *getPlatformFontPathChars(JNIEnv *env, jboolean noType1, jboolean is
      */
 #ifndef HEADLESS
     if (isX11) { // The following only works in an x11 environment.
-#if defined(__linux__)
+#if defined(__linux__) || defined(MACOSX)
     /* There's no headless build on linux ... */
     if (!AWTIsHeadless()) { /* .. so need to call a function to check */
 #endif
@@ -536,7 +567,7 @@ static char *getPlatformFontPathChars(JNIEnv *env, jboolean noType1, jboolean is
         x11dirs = getX11FontPath();
     }
     AWT_UNLOCK();
-#if defined(__linux__)
+#if defined(__linux__) || defined(MACOSX)
     }
 #endif
     }
