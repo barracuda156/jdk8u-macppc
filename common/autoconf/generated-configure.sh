@@ -14177,7 +14177,7 @@ $as_echo "$COMPILE_TYPE" >&6; }
   fi
   if test "x$OPENJDK_TARGET_OS" = "xmacosx"; then
     REQUIRED_OS_NAME=Darwin
-    REQUIRED_OS_VERSION=11.2
+    REQUIRED_OS_VERSION=10.5
   fi
 
 
@@ -14895,7 +14895,7 @@ $as_echo "$with_jvm_variants" >&6; }
   if test "x$JVM_VARIANT_ZEROSHARK" = xtrue ; then
     INCLUDE_SA=false
   fi
-  if test "x$VAR_CPU" = xppc64 -o "x$VAR_CPU" = xppc64le ; then
+  if test "x$VAR_CPU" = xppc -o "x$VAR_CPU" = xppc64 -o "x$VAR_CPU" = xppc64le ; then
     INCLUDE_SA=false
   fi
 
@@ -27622,14 +27622,6 @@ $as_echo "(none, will use system headers and frameworks)" >&6; }
       CFLAGS_JDK="${CFLAGS_JDK} -isysroot \"$SDKPATH\" -iframework\"$SDKPATH/System/Library/Frameworks\""
       CXXFLAGS_JDK="${CXXFLAGS_JDK} -isysroot \"$SDKPATH\" -iframework\"$SDKPATH/System/Library/Frameworks\""
       LDFLAGS_JDK="${LDFLAGS_JDK} -isysroot \"$SDKPATH\" -iframework\"$SDKPATH/System/Library/Frameworks\""
-    fi
-
-    if test -d "$SDKPATH/System/Library/Frameworks/JavaVM.framework/Frameworks" ; then
-      # These always need to be set on macOS 10.X, or we can't find the frameworks embedded in JavaVM.framework
-      # set this here so it doesn't have to be peppered throughout the forest
-      CFLAGS_JDK="$CFLAGS_JDK -F\"$SDKPATH/System/Library/Frameworks/JavaVM.framework/Frameworks\""
-      CXXFLAGS_JDK="$CXXFLAGS_JDK -F\"$SDKPATH/System/Library/Frameworks/JavaVM.framework/Frameworks\""
-      LDFLAGS_JDK="$LDFLAGS_JDK -F\"$SDKPATH/System/Library/Frameworks/JavaVM.framework/Frameworks\""
     fi
   fi
 
@@ -44012,10 +44004,8 @@ $as_echo "alsa cups pulse x11" >&6; }
 $as_echo_n "checking what is not needed on MacOSX?... " >&6; }
     ALSA_NOT_NEEDED=yes
     PULSE_NOT_NEEDED=yes
-    X11_NOT_NEEDED=yes
-    FONTCONFIG_NOT_NEEDED=yes
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: alsa pulse x11" >&5
-$as_echo "alsa pulse x11" >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: alsa pulse" >&5
+$as_echo "alsa pulse" >&6; }
   fi
 
   if test "x$OPENJDK_TARGET_OS" = xbsd; then
@@ -44073,6 +44063,26 @@ $as_echo "$as_me: WARNING: Option --enable-macosx-runtime-support is deprecated 
           x_libraries="$SYSROOT/usr/lib64"
         elif test -f "$SYSROOT/usr/lib/libX11.so"; then
           x_libraries="$SYSROOT/usr/lib"
+        fi
+      fi
+    fi
+  fi
+
+  # Prioritize MacPorts’ x11:
+  if test "x$OPENJDK_TARGET_OS" = "xmacosx"; then
+    if test "x$SYSROOT" != "x"; then
+      if test "x$x_includes" = xNONE; then
+        if test -f "$SYSROOT/opt/local/include/X11/Xlib.h"; then
+          x_includes="$SYSROOT/opt/local/include"
+        elif test -f "$SYSROOT/usr/X11R6/include/X11/Xlib.h"; then
+          x_includes="$SYSROOT/usr/X11R6/include"
+        fi
+      fi
+      if test "x$x_libraries" = xNONE; then
+        if test -f "$SYSROOT/opt/local/lib/libX11.dylib"; then
+          x_libraries="$SYSROOT/opt/local/lib"
+        elif test -f "$SYSROOT/usr/X11R6/lib/libX11.dylib"; then
+          x_libraries="$SYSROOT/usr/X11R6/lib"
         fi
       fi
     fi
@@ -44142,6 +44152,9 @@ fi
 # Standard set of common directories for X headers.
 # Check X11 before X11Rn because it is often a symlink to the current release.
 ac_x_header_dirs='
+/opt/local/include/X11
+/opt/local/include
+
 /usr/X11/include
 /usr/X11R7/include
 /usr/X11R6/include
