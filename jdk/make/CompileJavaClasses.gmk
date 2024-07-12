@@ -175,12 +175,8 @@ ifeq (, $(filter $(OPENJDK_TARGET_OS), windows macosx))
   EXFILES += sun/awt/AWTCharset.java
 endif
 
-ifeq ($(OPENJDK_TARGET_OS), macosx)
-  # exclude all X11 on Mac, we can't exclude some like below or we'll have compilation errors
-  EXCLUDES += sun/awt/X11
-else
-  # TBD: figure out how to eliminate this long list
-  EXFILES += sun/awt/X11/ScreenFormat.java \
+# TBD: figure out how to eliminate this long list
+EXFILES += sun/awt/X11/ScreenFormat.java \
       sun/awt/X11/XArc.java \
       sun/awt/X11/XChar2b.java \
       sun/awt/X11/XCharStruct.java \
@@ -222,7 +218,6 @@ else
       sun/awt/X11/XdbeSwapInfo.java \
       sun/awt/X11/XmbTextItem.java \
       sun/awt/X11/XwcTextItem.java
-endif
 
 # Exclude another implicitly not included file.
 EXFILES += sun/util/locale/AsciiUtil.java
