@@ -1046,7 +1046,9 @@ SetXStartOnFirstThreadArg()
 
 - (void) launchJava:(NSValue*)argsValue
 {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     _returnValue = JavaMain([argsValue pointerValue]);
+    [pool drain];
 }
 
 - (int) getReturnValue
